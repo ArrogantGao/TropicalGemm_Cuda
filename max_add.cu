@@ -32,7 +32,7 @@ template <
     const int THREAD_SIZE_N,  // width of block of C that each thread calculate
     const bool ENABLE_DOUBLE_BUFFER // whether enable double buffering or not
     > 
-__global__ void FP32_kernel( 
+__global__ void FP32_maxadd_kernel( 
     float * __restrict__ A,
     float * __restrict__ B,
     float * __restrict__ C,
@@ -161,7 +161,7 @@ template <
     const int THREAD_SIZE_N,  // width of block of C that each thread calculate
     const bool ENABLE_DOUBLE_BUFFER // whether enable double buffering or not
     > 
-__global__ void FP64_kernel( 
+__global__ void FP64_maxadd_kernel( 
     double * __restrict__ A,
     double * __restrict__ B,
     double * __restrict__ C,
@@ -290,7 +290,7 @@ template <
     const int THREAD_SIZE_N,  // width of block of C that each thread calculate
     const bool ENABLE_DOUBLE_BUFFER // whether enable double buffering or not
     > 
-__global__ void INT32_kernel( 
+__global__ void INT32_maxadd_kernel( 
     int * __restrict__ A,
     int * __restrict__ B,
     int * __restrict__ C,
@@ -419,7 +419,7 @@ template <
     const int THREAD_SIZE_N,  // width of block of C that each thread calculate
     const bool ENABLE_long_BUFFER // whether enable long buffering or not
     > 
-__global__ void INT64_kernel( 
+__global__ void INT64_maxadd_kernel( 
     long * __restrict__ A,
     long * __restrict__ B,
     long * __restrict__ C,
@@ -541,7 +541,7 @@ __global__ void INT64_kernel(
 }
 
 extern "C"
-void FP32(const int m, const int n, const int k, float *d_A, float *d_B, float *d_C){
+void FP32_maxadd(const int m, const int n, const int k, float *d_A, float *d_B, float *d_C){
 
     const int BLOCK_SIZE_M = 128;
     const int BLOCK_SIZE_K = 8;
@@ -557,13 +557,13 @@ void FP32(const int m, const int n, const int k, float *d_A, float *d_B, float *
     if (n % BLOCK_SIZE_N != 0)
         dimGrid.y++;
 
-    FP32_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
+    FP32_maxadd_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
         <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, m, n, k);
 
 }
 
 extern "C"
-void FP64(const int m, const int n, const int k, double *d_A, double *d_B, double *d_C){
+void FP64_maxadd(const int m, const int n, const int k, double *d_A, double *d_B, double *d_C){
 
     const int BLOCK_SIZE_M = 64;
     const int BLOCK_SIZE_K = 8;
@@ -579,13 +579,13 @@ void FP64(const int m, const int n, const int k, double *d_A, double *d_B, doubl
     if (n % BLOCK_SIZE_N != 0)
         dimGrid.y++;
 
-    FP64_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
+    FP64_maxadd_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
         <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, m, n, k);
 
 }
 
 extern "C"
-void INT32(const int m, const int n, const int k, int *d_A, int *d_B, int *d_C){
+void INT32_maxadd(const int m, const int n, const int k, int *d_A, int *d_B, int *d_C){
 
     const int BLOCK_SIZE_M = 128;
     const int BLOCK_SIZE_K = 8;
@@ -601,13 +601,13 @@ void INT32(const int m, const int n, const int k, int *d_A, int *d_B, int *d_C){
     if (n % BLOCK_SIZE_N != 0)
         dimGrid.y++;
 
-    INT32_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
+    INT32_maxadd_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
         <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, m, n, k);
 
 }
 
 extern "C"
-void INT64(const int m, const int n, const int k, long *d_A, long *d_B, long *d_C){
+void INT64_maxadd(const int m, const int n, const int k, long *d_A, long *d_B, long *d_C){
 
     const int BLOCK_SIZE_M = 64;
     const int BLOCK_SIZE_K = 8;
@@ -623,7 +623,7 @@ void INT64(const int m, const int n, const int k, long *d_A, long *d_B, long *d_
     if (n % BLOCK_SIZE_N != 0)
         dimGrid.y++;
 
-    INT64_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
+    INT64_maxadd_kernel<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N, ENABLE_DOUBLE_BUFFER> 
         <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, m, n, k);
 }
 
