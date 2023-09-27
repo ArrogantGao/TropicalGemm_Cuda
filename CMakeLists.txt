@@ -21,7 +21,7 @@ set(MACRO_COMBINATIONS
 )
 
 # Set the desired GPU architectures, e.g., 60 (Pascal), 70 (Volta), 75 (Turing), 80 (Ampere)
-set(CMAKE_CUDA_ARCHITECTURES 60 70 75 80)
+# set(CMAKE_CUDA_ARCHITECTURES 60 70 75 80)
 
 foreach(MACRO IN LISTS MACRO_COMBINATIONS)
     string(REPLACE "_" ";" MACRO_SPLIT ${MACRO})
