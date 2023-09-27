@@ -5,12 +5,11 @@ MACRO_COMBINATIONS :=  PlusMul_FP32 PlusMul_FP64 PlusMul_INT32 PlusMul_INT64  Tr
 LIBRARY_NAME	:=kernels.so
 
 $(LIBRARY_NAME):	$(foreach	MACROS,	$(MACRO_COMBINATIONS),	$(CUDA_FILES))
-	mkdir ./lib
 	@for	MACROS	in	$(MACRO_COMBINATIONS);	do	\
 	MACRO_1=$$(echo	$$MACROS	|	cut	-d'_'	-f1);	\
 	MACRO_2=$$(echo	$$MACROS	|	cut	-d'_'	-f2);	\
-	nvcc	-Xcompiler	-fPIC	-shared	-D$$MACRO_1	-D$$MACRO_2	$(CUDA_FILES)	-o	./lib/lib_$$MACROS.so;	\
+	nvcc	-Xcompiler	-fPIC	-shared	-D$$MACRO_1	-D$$MACRO_2	$(CUDA_FILES)	-o	./lib_$$MACROS.so;	\
     done
 
 clean:
-	rm	-rf	./lib
+	rm	-rf	*.so
