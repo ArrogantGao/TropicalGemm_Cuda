@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18) # 3.18 or later is required for CUDA_ARCHIT
 project(TropicalGEMM CXX CUDA)
 
 set(CUDA_FILES tropicalgemm_kernels.cu)
-set(LIBRARY_NAME kernels.so)
+set(LIBRARY_NAME tropicalgemm_kernels)
 
 set(MACRO_COMBINATIONS
     PlusMul_FP32
@@ -21,7 +21,10 @@ set(MACRO_COMBINATIONS
 )
 
 # Set the desired GPU architectures, e.g., 60 (Pascal), 70 (Volta), 75 (Turing), 80 (Ampere)
-# set(CMAKE_CUDA_ARCHITECTURES 60 70 75 80)
+set(CMAKE_CUDA_ARCHITECTURES 60 70 75 80)
+
+# Set the output directory for the shared libraries
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 foreach(MACRO IN LISTS MACRO_COMBINATIONS)
     string(REPLACE "_" ";" MACRO_SPLIT ${MACRO})
