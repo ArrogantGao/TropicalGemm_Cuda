@@ -23,7 +23,8 @@ set(MACRO_COMBINATIONS
 # Set the desired GPU architectures, e.g., 60 (Pascal), 70 (Volta), 75 (Turing), 80 (Ampere)
 set(CMAKE_CUDA_ARCHITECTURES 60 70 75 80)
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+# Set the output directory for the shared libraries
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 foreach(MACRO IN LISTS MACRO_COMBINATIONS)
     string(REPLACE "_" ";" MACRO_SPLIT ${MACRO})
@@ -34,5 +35,4 @@ foreach(MACRO IN LISTS MACRO_COMBINATIONS)
     add_library(${TARGET_NAME} SHARED ${CUDA_FILES})
     target_compile_definitions(${TARGET_NAME} PRIVATE ${MACRO_1} ${MACRO_2})
     set_target_properties(${TARGET_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    install(TARGETS ${TARGET_NAME} LIBRARY DESTINATION lib)
 endforeach()
