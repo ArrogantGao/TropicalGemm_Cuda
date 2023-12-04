@@ -693,7 +693,7 @@ __global__ void CONCATENATETHREE(TYPENAME, FUNCNAME, NN)(
 }
 
 extern "C"{
-void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE *d_A, TYPE *d_B, TYPE *d_C, TYPE alpha, TYPE beta, const char TA, const char TB){
+void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE *d_A, TYPE *d_B, TYPE *d_C, TYPE alpha, TYPE beta, const char TA, const char TB, CUstream_st *stream){
     // TA and TB are 'T' or 'N'
 
     const char T = 'T';
@@ -704,6 +704,8 @@ void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE
     const int BLOCK_SIZE_N = 64;
     const int THREAD_SIZE_M = 4;
     const int THREAD_SIZE_N = 4;
+
+    int shared_mem_size = sizeof(TYPE) * (BLOCK_SIZE_M * BLOCK_SIZE_K + BLOCK_SIZE_K * BLOCK_SIZE_N);
 
     
     if (TA == T && TB == T) {
@@ -719,7 +721,7 @@ void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE
         dim3 dimGrid(DIM_GRID_X * DIM_GRID_Y);
 
         CONCATENATETHREE(TYPENAME, FUNCNAME, TT)<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N> 
-        <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
+        <<< dimGrid, dimBlock, shared_mem_size, stream >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
     }
 
     if (TA == T && TB == N) {
@@ -735,7 +737,7 @@ void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE
         dim3 dimGrid(DIM_GRID_X * DIM_GRID_Y);
             
         CONCATENATETHREE(TYPENAME, FUNCNAME, TN)<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N> 
-        <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
+        <<< dimGrid, dimBlock, shared_mem_size, stream >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
     }
 
     if (TA == N && TB == T) {
@@ -751,7 +753,7 @@ void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE
         dim3 dimGrid(DIM_GRID_X * DIM_GRID_Y);
 
         CONCATENATETHREE(TYPENAME, FUNCNAME, NT)<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N> 
-            <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
+            <<< dimGrid, dimBlock, shared_mem_size, stream >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
     }
 
     if (TA == N && TB == N) {
@@ -767,7 +769,7 @@ void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE
         dim3 dimGrid(DIM_GRID_X * DIM_GRID_Y);
 
         CONCATENATETHREE(TYPENAME, FUNCNAME, NN)<BLOCK_SIZE_M, BLOCK_SIZE_K, BLOCK_SIZE_N, THREAD_SIZE_M, THREAD_SIZE_N> 
-            <<< dimGrid, dimBlock >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
+            <<< dimGrid, dimBlock, shared_mem_size, stream >>>(d_A, d_B, d_C, alpha, beta, m, n, k, DIM_GRID_X, DIM_GRID_Y);
     }
 
 }
