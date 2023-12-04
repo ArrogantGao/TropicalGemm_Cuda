@@ -9,6 +9,7 @@
 
 // CUDA runtime
 #include <cuda_runtime.h>
+#include <cublas_v2.h>
 
 #define CONCATENATE_(x, y) x##y
 #define CONCATENATETHREE_(x, y, z) x##y##z
