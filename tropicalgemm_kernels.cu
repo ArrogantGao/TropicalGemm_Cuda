@@ -62,26 +62,31 @@
 #ifdef Bool
 #define TYPE bool
 #define TYPENAME BOOL
+#define BLOCKSIZEK 32
 #endif
 
 #ifdef FP32
 #define TYPE float
 #define TYPENAME FLOAT
+#define BLOCKSIZEK 32
 #endif
 
 #ifdef FP64
 #define TYPE double
 #define TYPENAME DOUBLE
+#define BLOCKSIZEK 16
 #endif
 
 #ifdef INT32
 #define TYPE int
 #define TYPENAME INT
+#define BLOCKSIZEK 32
 #endif
 
 #ifdef INT64
 #define TYPE long
 #define TYPENAME LONG
+#define BLOCKSIZEK 16
 #endif
 
 
@@ -701,7 +706,7 @@ void CONCATENATE(TYPENAME, FUNCNAME)(const int m, const int n, const int k, TYPE
     const char N = 'N';
 
     const int BLOCK_SIZE_M = 64;
-    const int BLOCK_SIZE_K = 32;
+    const int BLOCK_SIZE_K = BLOCKSIZEK;
     const int BLOCK_SIZE_N = 64;
     const int THREAD_SIZE_M = 4;
     const int THREAD_SIZE_N = 4;
